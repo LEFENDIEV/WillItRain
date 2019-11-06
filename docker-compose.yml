@@ -1,0 +1,40 @@
+version: "3.3"
+services:
+  mysql:
+    container_name: spark-mysql-debug
+    build:
+      context: .
+      dockerfile: mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - docker_network
+    environment:
+      MYSQL_ROOT_PASSWORD: "pass"
+      MYSQL_DATABASE: "sparkdb"
+    volumes:
+      - ./code/sql:/tmp/sql
+  java:
+    container_name: spark-java
+    build:
+      context: .
+      dockerfile: java
+    volumes:
+      - .:/code
+    networks:
+      - docker_network
+    ports:
+      - "4567:4567"
+      - "5005:5005"
+
+networks:
+  docker_network:
+    driver: bridge
+
+volumes:
+  share-code:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD
+      o: bind
