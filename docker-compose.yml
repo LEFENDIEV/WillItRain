@@ -23,6 +23,9 @@ services:
       - .:/code
     networks:
       - docker_network
+    depends_on:
+      - mysql
+    command: ["java", "-jar", "/code/target/WillItRain-jar-with-dependencies.jar"]
     ports:
       - "4567:4567"
       - "5005:5005"

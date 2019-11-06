@@ -16,11 +16,15 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
-
 WORKDIR /code
-VOLUME /code
+#VOLUME /code
 COPY . /code
 #Uncomment for dev
+
+#RUN mvn package
+#COPY /code/target/* /target
+
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 #Uncomment for direct launch
 #CMD ["java", "-jar", "/code/target/WillItRain-jar-with-dependencies.jar"]
+CMD ["mvn", "package"]
