@@ -28,16 +28,16 @@ public class WillItRain {
         try {
             System.out.println("Spark has ignited !");
             port(4567);
-            UserDAO dbConnection = new UserDAO("jdbc:mysql://mysql:3306/sparkdb", "root", "pass");
+            UserDAO userDAO = new UserDAO("jdbc:mysql://mysql:3306/sparkdb", "root", "pass");
             get("/", (req, res) -> {
                 return "Default endpoint";
             });
 
             //Return the user with the specified id
-            get("/user/:id", (req, res) -> {
+            get("/user/:id", (request, res) -> {
                 String dbReturn = "";
                 try {
-                    dbReturn = dbConnection.getUser(req.params(":id")).toString();
+                    dbReturn = userDAO.getUser(Integer.parseInt(request.params(":id"))).toString();
                 }catch (Exception e){
                     System.out.println("getUser"+e);
                 }finally {
@@ -49,7 +49,7 @@ public class WillItRain {
                 try {
                     response.type("application/json");
                     User user = new Gson().fromJson(request.body(), User.class);
-                    dbConnection.addUser(user);
+                    userDAO.addUser(user);
                 }catch (Exception e){
                     System.out.println("postRequestCreate"+e);
                 }finally {
@@ -59,7 +59,7 @@ public class WillItRain {
             //Delete the user with the specified id
             delete("/user/:id", (request , response) -> {
                 try {
-                    dbConnection.deleteUser(request.params(":id"));
+                    userDAO.deleteUser(Integer.parseInt(request.params(":id")));
                 }catch (Exception e){
                     System.out.println("deleteUser"+e);
                 }finally {
@@ -72,7 +72,7 @@ public class WillItRain {
                     Gson gson             = new Gson();
                     Type typeListAttr     = new TypeToken<List<String>>(){}.getType();
                     List<String> listAttr = gson.fromJson(request.body(), typeListAttr);
-                    dbConnection.editUser(request.params(":id"), listAttr.get(0));
+                    userDAO.editUser(Integer.parseInt(request.params(":id")), listAttr.get(0));
                 }catch (Exception e){
                     System.out.println("updateUser"+e);
                 }finally {

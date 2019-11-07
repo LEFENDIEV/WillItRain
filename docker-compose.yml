@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   mysql:
-    container_name: spark-mysql-debug
+    container_name: spark-mysql
     build:
       context: .
       dockerfile: mysql
@@ -28,7 +28,6 @@ services:
     command: ["java", "-jar", "/code/target/WillItRain-jar-with-dependencies.jar"]
     ports:
       - "4567:4567"
-      - "5005:5005"
 
 networks:
   docker_network:
