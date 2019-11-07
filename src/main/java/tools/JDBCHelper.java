@@ -12,7 +12,7 @@ import java.sql.*;
  *
  * */
 public class JDBCHelper {
-    private Connection connection = null;
+    private Connection connection;
     private String url;
     private String username;
     private String password;
@@ -39,9 +39,7 @@ public class JDBCHelper {
      * */
     public Connection connect(){
         try {
-            if(connection.isClosed()){
-                this.connection = DriverManager.getConnection(this.url, this.username, this.password);
-            }
+            this.connection = DriverManager.getConnection(this.url, this.username, this.password);
         }catch (Exception e){
             System.out.println("Connection "+e);
         }finally {
