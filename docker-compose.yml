@@ -13,7 +13,6 @@ services:
       MYSQL_ROOT_PASSWORD: "pass"
       MYSQL_DATABASE: "sparkdb"
     volumes:
-      - ./code/sql:/tmp/sql
       - ./sql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
   java:
     container_name: spark-java
