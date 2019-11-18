@@ -24,6 +24,13 @@ public class User {
      * Constructor - no param
      * */
     public User() {
+
+    }
+    /**
+     * Constructor only in use of LocationDAO::getLocation()
+     * */
+    public User(int id) {
+        this.id = id;
     }
 
     /**
