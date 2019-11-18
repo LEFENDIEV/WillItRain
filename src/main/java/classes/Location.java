@@ -4,12 +4,15 @@
  *
  * */
 
-package location;
+package classes;
+import classes.User;
+
+
 
 public class Location {
     private int id;
-    private String longitude;
-    private String latitude;
+    private double longitude;
+    private double latitude;
     private User user;
 
 
@@ -17,13 +20,15 @@ public class Location {
     /**
      * Constructor
      * @param id int
-     * @param longitude String
-     * @param latitude String
+     * @param longitude double
+     * @param latitude double
+     * @param user User
      * */
-    public Location(int id, String longitude, String latitude) {
-        this.id = id;
+    public Location(int id, double longitude, double latitude, User user) {
+        this.id        = id;
         this.longitude = longitude;
-        this.latitude = latitude;
+        this.latitude  = latitude;
+        this.user      = user;
     }
 
     /**
@@ -33,35 +38,41 @@ public class Location {
     }
 
     /**
-     * Translate a Location to a String
+     * Translate a Location to a double
      * */
     @Override
     public String toString() {
         return "Location{" +
                 "id=" + id +
                 ", longitude='" + longitude + '\'' +
-                ", latitude='" + latitudee + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", id_user='" + user.getId() + '\'' +
                 '}';
     }
+
     /**
      * Getters and Setters for a Location
      * */
+
     public int getId() {
         return id;
     }
 
-    public String getLongitude() {
+    public void setId(int id) {
+         this.id = id;
+    }
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-    public String getLongitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLongitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
     public User getUser() {
