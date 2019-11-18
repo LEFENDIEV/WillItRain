@@ -8,11 +8,11 @@ CREATE TABLE users (
      PRIMARY KEY (id)
 );              
 
-CREATE TABLE locations (
+CREATE TABLE location (
     id int NOT NULL,
-    posx FLOAT,
-    posy FLOAT,
+    longitude FLOAT,
+    latitude FLOAT,
     id_user int NOT NULL,
-    PRIMARY KEY (id_user, id),
-    FOREIGN KEY (id_user) REFERENCES users(id)
+    FOREIGN KEY (id_user) REFERENCES users(id),
+    PRIMARY KEY (id_user, id)
 );
