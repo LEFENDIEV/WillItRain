@@ -33,6 +33,11 @@
             <artifactId>json</artifactId>
             <version>20190722</version>
         </dependency>
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>spark-pac4j</artifactId>
+            <version>1.0.3</version>
+        </dependency>
 	</dependencies>
   <build>
     <plugins>
