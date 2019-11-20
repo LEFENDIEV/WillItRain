@@ -46,7 +46,7 @@ public class Location {
                 "id=" + id +
                 ", longitude='" + longitude + '\'' +
                 ", latitude='" + latitude + '\'' +
-                ", id_user='" + user.getId() + '\'' +
+                ", id_user=" + user.getId()  +
                 '}';
     }
 
