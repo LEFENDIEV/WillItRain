@@ -1,8 +1,9 @@
 /**
  * @author        : LEFENDIEV
- * Creation date : 1/11/2019
+ * Creation date : 18/11/2019
  *
  * */
+
 package Controller;
 
 import tools.JDBCHelper;
@@ -63,8 +64,6 @@ public class  LocationDAO {
             stmt.setInt(1, id);
             res = stmt.executeQuery();
             res.next();
-            System.out.println(res.getInt("id"));
-            System.out.println(res.getString("id"));
             location.setId(res.getInt("id"));
             location.setLongitude(res.getDouble("longitude"));
             location.setLatitude(res.getDouble("latitude"));
@@ -114,6 +113,28 @@ public class  LocationDAO {
             System.out.println("updateLocation"+e);
         }finally {
             db.disconnect(stmt);
+        }
+    }
+
+    /**
+     * Return the amount of locations of a User using his id
+     * */
+    public int getNbLocation (int id){
+        String preQuery        = "select count(*) from location where id_user=?";
+        PreparedStatement stmt = null;
+        ResultSet res          = null;
+        int nbLocation=0;
+        try {
+            stmt = this.db.connect().prepareStatement(preQuery);
+            stmt.setInt(1,id);
+            res = stmt.executeQuery();
+            res.next();
+            nbLocation = res.getInt(1);
+        }catch (Exception e){
+            System.out.println("getNbLocation"+e);
+        }finally {
+            db.disconnect(stmt);
+            return nbLocation;
         }
     }
 
