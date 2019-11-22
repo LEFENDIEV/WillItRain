@@ -9,18 +9,19 @@ package classes;
 
 public class User  {
     private int id;
-    private String name;
+    private String login;
     private String password;
+    private String salt;
 
     /**
      * Constructor
      * @param id int
-     * @param name String
+     * @param login String
      * */
-    public User(int id, String name, String password) {
+    public User(int id, String login, String password) {
         this.id = id;
-        this.name = name;
-        this.password =  password;
+        this.login = login;
+        this.password = password;
     }
 
     /**
@@ -43,12 +44,23 @@ public class User  {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
                 '}';
     }
+
     /**
      * Getters and Setters for a User
      * */
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
     public int getId() {
         return id;
     }
@@ -57,12 +69,12 @@ public class User  {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLogin() {
+        return login;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLogin(String login) {
+        this.login = login;
     }
     public String getPassword() {
         return password;
