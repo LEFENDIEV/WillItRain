@@ -144,9 +144,10 @@ public class WillItRain {
                             userDAO.addUser(user);
                             //token creation
                             tokenInfo= sparkJWTHelper.generateJWTWillItRain(user);
+                            response.header("Access-Control-Allow-Origin ", "http://localhost:8080");
                             response.cookie("user-token", tokenInfo.get(0),3600,  false, true);
                             response.cookie("user-token-salt", tokenInfo.get(1),3600,  false, true);
-                            response.cookie("getLoginPage", user.getLogin(), 3600);
+                            response.cookie("login", user.getLogin(), 3600);
                             response.redirect(endpointList.get("getFrontPageMap"));
                         }else{
                             finalMessage = "login taken";
