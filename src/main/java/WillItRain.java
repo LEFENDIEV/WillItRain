@@ -40,16 +40,22 @@ public class WillItRain {
             Map<String, String> endpointList = new HashMap<String, String>() {{
                 put("returnUserById", "/user/:id");
                 put("registration", "/register");
-                put("getLoginPageg", "/loging");
+                put("loging", "/loging");
                 put("deleteUserById", "/user/:id");
                 put("modifyUserById", "/user/:id");
                 put("getWeatherByLocation", "/user/:id/willitrain/:location");
                 put("getWeatherByCity", "/user/:id/willitrain/:city");
                 put("getFrontPageMap", "/frontpage");
+                put("setLocation", "/frontpage/location");
             }};
             //start of endpoints code
             get("/", (req, res) -> {
                 return "Default endpoint";
+            });
+            after((request, response) -> {
+                //       /!\ the value * should be allowed in dev process only
+                response.header("Access-Control-Allow-Origin ", "*");
+                response.header("Access-Control-Allow-Methods ", "POST, GET, DELETE, PUT");
             });
             //Return the user with the specified id
             get(endpointList.get("returnUserById"), (request, response) -> {
@@ -144,7 +150,6 @@ public class WillItRain {
                             userDAO.addUser(user);
                             //token creation
                             tokenInfo= sparkJWTHelper.generateJWTWillItRain(user);
-                            response.header("Access-Control-Allow-Origin ", "http://localhost:8080");
                             response.cookie("user-token", tokenInfo.get(0),3600,  false, true);
                             response.cookie("user-token-salt", tokenInfo.get(1),3600,  false, true);
                             response.cookie("login", user.getLogin(), 3600);
