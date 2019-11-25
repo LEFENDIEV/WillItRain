@@ -193,7 +193,7 @@ public class WillItRain {
                             Gson gson             = new Gson();
                             Type typeListAttr     = new TypeToken<List<String>>(){}.getType();
                             List<String> listAttr = gson.fromJson(request.body(), typeListAttr);
-                            userDAO.editUser(Integer.parseInt(request.params(":id")), listAttr.get(0));
+                            userDAO.editUser(Integer.parseInt(request.params(":id")), listAttr.get(0), listAttr.get(1), listAttr.get(2));
                             response.status(200);
                         }else{
                             response.status(401);
