@@ -13,7 +13,8 @@ public class Location {
     private int id;
     private double longitude;
     private double latitude;
-    private User user;
+    private transient User user;
+    private  String formattedAdress;
 
 
 
@@ -31,6 +32,13 @@ public class Location {
         this.user      = user;
     }
 
+    public Location(int id, double longitude, double latitude, User user, String formattedAdress) {
+        this.id        = id;
+        this.longitude = longitude;
+        this.latitude  = latitude;
+        this.user      = user;
+        this.formattedAdress    = formattedAdress;
+    }
     /**
      * Constructor - no param
      * */
@@ -44,9 +52,10 @@ public class Location {
     public String toString() {
         return "Location{" +
                 "id=" + id +
-                ", longitude='" + longitude + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", id_user=" + user.getId()  +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", user=" + user +
+                ", formattedAdress='" + formattedAdress + '\'' +
                 '}';
     }
 
@@ -63,6 +72,14 @@ public class Location {
     }
     public double getLongitude() {
         return longitude;
+    }
+
+    public String getFormattedAdress() {
+        return formattedAdress;
+    }
+
+    public void setFormattedAdress(String formattedAdress) {
+        this.formattedAdress = formattedAdress;
     }
 
     public void setLongitude(double longitude) {
