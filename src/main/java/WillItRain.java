@@ -70,7 +70,7 @@ public class WillItRain {
                     if(request.cookie("user-token")!=null){
                         String token = request.cookie("user-token");
                         String salt = request.cookie("user-token-salt");
-                        User user = userDAO.getUserByLogin(request.cookie("getLoginPage"));
+                        User user = userDAO.getUserByLogin(request.cookie("login"));
                         if(sparkJWTHelper.isWillItRainTokenValid(token, salt,  user)){
                             dbReturn = userDAO.getUser(Integer.parseInt(request.params(":id"))).toString();
                             response.status(200);
@@ -89,13 +89,12 @@ public class WillItRain {
             //Allow the user to create a token for his session and redirect to front page
             post(endpointList.get("loging"), ((request, response) -> {
                 String token;
-                User user = new User();
                 String finalMessage = "loging";
                 try{
                     if(request.cookie("user-token")!=null){
                         token = request.cookie("user-token");
                         String salt = request.cookie("user-token-salt");
-                        user = userDAO.getUserByLogin(request.cookie("login"));
+                        User user = userDAO.getUserByLogin(request.cookie("login"));
                         if(sparkJWTHelper.isWillItRainTokenValid(token, salt,  user)){
                             response.status(401);
                         }else{
@@ -106,7 +105,7 @@ public class WillItRain {
                         ArrayList<String> tokenInfo = new ArrayList<>();
                         User requestUser = new Gson().fromJson(request.body(), User.class);
                         String hashedPassword;
-                        user = userDAO.getUserByLogin(requestUser.getLogin());
+                        User user = userDAO.getUserByLogin(requestUser.getLogin());
                         //creation of the test password with the dummy user password and the user salt
                         KeySpec spec = new PBEKeySpec(requestUser.getPassword().toCharArray(),Base64.getDecoder().decode(user.getSalt()), 65536, 128);
                         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -114,18 +113,18 @@ public class WillItRain {
                         hashedPassword = Base64.getEncoder().encodeToString(encodedPassword);
                         if(user.getPassword().equals(hashedPassword)){
                             tokenInfo = sparkJWTHelper.generateJWTWillItRain(user);
-                            response.cookie("getLoginPage", user.getLogin(),3600 );
+                            response.cookie("login", user.getLogin(),3600 );
                             response.cookie("user-token", tokenInfo.get(0),3600,  false, true);
                             response.cookie("user-token-salt", tokenInfo.get(1),3600,  false, true);
-                            response.redirect(endpointList.get("getFrontPageMap"));
-
+                            finalMessage = "logged";
+                            response.status(200);
                         }else{
-                            finalMessage = "not getLoginPageg";
+                            finalMessage = "not loging";
                             response.status(401);
                         }
                     }
                 }catch (Exception e){
-                    System.out.println("getLoginPageg"+e);
+                    System.out.println("loging"+e);
                 }
                 return finalMessage;
             }));
@@ -159,7 +158,7 @@ public class WillItRain {
                             response.cookie("user-token", tokenInfo.get(0),3600,  false, true);
                             response.cookie("user-token-salt", tokenInfo.get(1),3600,  false, true);
                             response.cookie("login", user.getLogin(), 3600);
-                            response.redirect(endpointList.get("getFrontPageMap"));
+                            response.status(200);
                         }else{
                             finalMessage = "login taken";
                         }
@@ -260,8 +259,7 @@ public class WillItRain {
                         StringWriter writer = new StringWriter();
                         String token = request.cookie("user-token");
                         String salt = request.cookie("user-token-salt");
-                        User user = userDAO.getUserByLogin(request.cookie("login:w" +
-                                ""));
+                        User user = userDAO.getUserByLogin(request.cookie("login"));
                         if(sparkJWTHelper.isWillItRainTokenValid(token, salt,  user)){
                             IOUtils.copy(is, writer);
                             String jsonContent  = writer.toString();
@@ -288,10 +286,44 @@ public class WillItRain {
                         String salt = request.cookie("user-token-salt");
                         User user = userDAO.getUserByLogin(request.cookie("login"));
                         if(sparkJWTHelper.isWillItRainTokenValid(token, salt,  user)){
-                            ArrayList locationList = userDAO.getLocationOfUser(user.getId());
+                            ArrayList<Location> locationList = userDAO.getLocationOfUser(user.getId());
                             Gson gson = new Gson();
                             Type type = new TypeToken<ArrayList<Location>>() {}.getType();
                             String json = gson.toJson(locationList, type);
+                            System.out.println(json);
+                            response.type("application/json");
+                            response.body(json);
+                            response.status(200);
+                        }else{
+                            response.status(401);
+                        }
+                    }else{
+                        response.status(401);
+                    }
+                }catch(Exception e){
+                    System.out.println("getFrontPageMap" + e);
+                }
+                finally {
+                    return "frontpage";
+                }
+            } ));
+            //Redirect to the front page where the map is displayed
+            post(endpointList.get("setLocation"), ((request, response) ->{
+                try {
+                    if(request.cookie("user-token")!=null){
+                        String token = request.cookie("user-token");
+                        String salt = request.cookie("user-token-salt");
+                        User user = userDAO.getUserByLogin(request.cookie("login"));
+                        if(sparkJWTHelper.isWillItRainTokenValid(token, salt,  user)){
+                            Gson gson             = new Gson();
+                            Type typeListAttr     = new TypeToken<List<String>>(){}.getType();
+                            List<String> listAttr = gson.fromJson(request.body(), typeListAttr);
+                            int nbLocation = locationDAO.getNbLocation(user.getId());
+                            int incrementalId = nbLocation++;
+                            System.out.println(incrementalId+"            "+nbLocation);
+                            Location currentLocation = new Location(incrementalId, Float.valueOf(listAttr.get(0)), Float.valueOf(listAttr.get(1)), user, listAttr.get(2));
+                            System.out.println(currentLocation.toString());
+                            locationDAO.addLocation(currentLocation);
                             response.status(200);
                         }else{
                             response.status(401);
