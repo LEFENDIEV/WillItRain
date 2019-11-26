@@ -38,24 +38,30 @@ public class WillItRain {
             SparkJWTHelper sparkJWTHelper = new SparkJWTHelper();
             //This hashmap allow to have a quick view of all endpoints, and allow quick changes to them
             Map<String, String> endpointList = new HashMap<String, String>() {{
-                put("returnUserById", "/user/:id");
-                put("registration", "/register");
-                put("loging", "/loging");
-                put("deleteUserById", "/user/:id");
-                put("modifyUserById", "/user/:id");
-                put("getWeatherByLocation", "/user/:id/willitrain/:location");
-                put("getWeatherByCity", "/user/:id/willitrain/:city");
-                put("getFrontPageMap", "/frontpage");
-                put("setLocation", "/frontpage/location");
+                put("returnUserById", "/api/user/:id");
+                put("registration", "/api/register");
+                put("loging", "/api/loging");
+                put("deleteUserById", "/api/user/:id");
+                put("modifyUserById", "/api/user/:id");
+                put("getWeatherByLocation", "/api/user/:id/willitrain/:location");
+                put("getWeatherByCity", "/api/user/:id/willitrain/:city");
+                put("getFrontPageMap", "/api/frontpage");
+                put("setLocation", "/api/frontpage/location");
             }};
             //start of endpoints code
             get("/", (req, res) -> {
                 return "Default endpoint";
             });
-            after((request, response) -> {
+            //start of endpoints code
+            options("/*", (req, res) -> {
+                return "";
+            });
+            before((request, response) -> {
                 //       /!\ the value * should be allowed in dev process only
                 response.header("Access-Control-Allow-Origin ", "*");
-                response.header("Access-Control-Allow-Methods ", "POST, GET, DELETE, PUT");
+                response.header("Access-Control-Allow-Methods ", "*");
+                response.header("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+                response.header("Access-Control-Allow-Credentials", "true");
             });
             //Return the user with the specified id
             get(endpointList.get("returnUserById"), (request, response) -> {
