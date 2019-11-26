@@ -41,7 +41,10 @@ public class  UserDAO {
             stmt.setString(1, user.getLogin());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getSalt());
+            System.out.println(user.toString());
             stmt.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("addUser"+e);
         }finally {
@@ -55,7 +58,7 @@ public class  UserDAO {
      * @return Returns a User object
      * */
     public User getUser (int id){
-        User user              = new User();
+        User user              = null;
         String preQuery        = "select * from users where id= ?";
         PreparedStatement stmt = null;
         ResultSet res          = null;
@@ -64,10 +67,14 @@ public class  UserDAO {
             stmt.setInt(1, id);
             res = stmt.executeQuery();
             res.next();
-            user.setId(Integer.parseInt(res.getString("id")));
-            user.setLogin(res.getString("login"));
-            user.setPassword(res.getString("password"));
-            user.setSalt(res.getString("salt"));
+           if(res!=null){
+               user.setId(Integer.parseInt(res.getString("id")));
+               user.setLogin(res.getString("login"));
+               user.setPassword(res.getString("password"));
+               user.setSalt(res.getString("salt"));
+           }
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("getUser"+e);
         }finally {
@@ -87,6 +94,8 @@ public class  UserDAO {
             stmt = this.db.connect().prepareStatement(preQuery);
             stmt.setInt(1, id);
             stmt.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("deleteUser"+e);
         }finally {
@@ -109,6 +118,8 @@ public class  UserDAO {
             stmt.setString(3, salt);
             stmt.setInt(4, id);
             stmt.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("updateUser"+e);
         }finally {
@@ -135,6 +146,8 @@ public class  UserDAO {
             if(nbLogin==0){
                 isAvailable = true;
             }
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("checkLoginAvailable");
         }
@@ -146,7 +159,7 @@ public class  UserDAO {
      * @param login String
      * */
     public User getUserByLogin(String login){
-        User user = new User();
+        User user = null;
         String preQuery        = "Select * from users where login=?";
         ResultSet res          = null;
         PreparedStatement stmt = null;
@@ -157,12 +170,14 @@ public class  UserDAO {
             res = stmt.executeQuery();
             if(res != null) {
             res.next();
-
+                user = new User();
                 user.setId(res.getInt(1));
                 user.setLogin(res.getString(2));
                 user.setPassword(res.getString(3));
                 user.setSalt(res.getString(4));
             }
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("getUserByLogin"+e);
         }
@@ -183,6 +198,8 @@ public class  UserDAO {
             res.next();
 
             nbUser = res.getInt(1);
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("getNbUser"+e);
         }
@@ -210,10 +227,13 @@ public class  UserDAO {
                 currentLocation.setId(res.getInt(1));
                 currentLocation.setLongitude(res.getFloat(2));
                 currentLocation.setLatitude(res.getFloat(3));
-                currentLocation.setUser(new User(res.getInt(4)));
+                currentLocation.setFormattedAdress(res.getString(4));
+                currentLocation.setUser(new User(res.getInt(5)));
                 System.out.println(currentLocation.toString());
                 locationListOfUser.add(currentLocation);
             }while(res.isLast());
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("getLocationOfUser"+e);
         }
