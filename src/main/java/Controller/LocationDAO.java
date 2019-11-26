@@ -33,15 +33,18 @@ public class  LocationDAO {
      *
      * */
     public void addLocation (Location location){
-        String preQuery        = "insert into location (id, longitude, latitude, id_user) values (?, ?, ?, ?)";
+        String preQuery        = "insert into location (id, longitude, latitude, formatted_adress, id_user) values (?, ?, ?, ?, ?)";
         PreparedStatement stmt = null;
         try {
             stmt = this.db.connect().prepareStatement(preQuery);
             stmt.setInt(1, location.getId());
             stmt.setDouble(2, location.getLongitude());
             stmt.setDouble(3, location.getLatitude());
-            stmt.setInt(4, location.getUser().getId());
+            stmt.setString(4, location.getFormattedAdress());
+            stmt.setInt(5, location.getUser().getId());
             stmt.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("addLocation"+e);
         }finally {
@@ -64,10 +67,13 @@ public class  LocationDAO {
             stmt.setInt(1, id);
             res = stmt.executeQuery();
             res.next();
-            location.setId(res.getInt("id"));
-            location.setLongitude(res.getDouble("longitude"));
-            location.setLatitude(res.getDouble("latitude"));
-            location.setUser(new User(res.getInt("id_user")));
+            location.setId(res.getInt(0));
+            location.setLongitude(res.getDouble(1));
+            location.setLatitude(res.getDouble(2));
+            location.setFormattedAdress(res.getString(3));
+            location.setUser(new User(res.getInt(4)));
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("getLocation"+e);
         }finally {
@@ -88,6 +94,8 @@ public class  LocationDAO {
             stmt = this.db.connect().prepareStatement(preQuery);
             stmt.setInt(1, id);
             stmt.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("deleteLocation"+e);
         }finally {
@@ -100,15 +108,18 @@ public class  LocationDAO {
      * @param location Location
      * */
     public void editLocation (Location location){
-        String preQuery        = "update location set longitude = ?, latitude = ? where id=? and id_user=?";
+        String preQuery        = "update location set longitude = ?, latitude = ?, formatted_adress = ? where id=? and id_user=?";
         PreparedStatement stmt = null;
         try {
             stmt = this.db.connect().prepareStatement(preQuery);
             stmt.setDouble(1, location.getLongitude());
             stmt.setDouble(2, location.getLatitude());
-            stmt.setInt(3, location.getId());
-            stmt.setInt(4, location.getUser().getId());
+            stmt.setString(3, location.getFormattedAdress());
+            stmt.setInt(4, location.getId());
+            stmt.setInt(5, location.getUser().getId());
             stmt.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("updateLocation"+e);
         }finally {
@@ -130,6 +141,8 @@ public class  LocationDAO {
             res = stmt.executeQuery();
             res.next();
             nbLocation = res.getInt(1);
+        }catch (SQLException e){
+            System.out.println("SQL Exception = "+e);
         }catch (Exception e){
             System.out.println("getNbLocation"+e);
         }finally {
