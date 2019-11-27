@@ -54,7 +54,7 @@ public class WillItRain {
             });
             //start of endpoints code
             options("/*", (req, res) -> {
-                return "";
+                return "Default options";
             });
             before((request, response) -> {
                 //       /!\ the value * should be allowed in dev process only
