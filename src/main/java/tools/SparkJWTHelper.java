@@ -15,6 +15,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.security.SecureRandom;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class SparkJWTHelper {
@@ -32,9 +34,6 @@ public class SparkJWTHelper {
      * */
     public ArrayList<String> generateJWTWillItRain(User user){
         String token = "";
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
         ArrayList<String> tokenInfo = new ArrayList<>();
         try {
             SecureRandom random = new SecureRandom();
@@ -46,7 +45,6 @@ public class SparkJWTHelper {
             token = JWT.create()
                     .withHeader(claimList)
                     .withIssuer(user.getLogin())
-                    .withExpiresAt(calendar.getTime())
                     .sign(algorithmHS);
             tokenInfo.add(token);
             tokenInfo.add(Base64.getEncoder().encodeToString(salt));
