@@ -64,7 +64,7 @@ public class WillItRain {
                 response.header("Access-Control-Allow-Credentials", "true");
             });
             after(((request, response) -> {
-                if("".equals(request.body())){
+                if("".equals(response.body())){
                     response.status(401);
                 }
             }));
