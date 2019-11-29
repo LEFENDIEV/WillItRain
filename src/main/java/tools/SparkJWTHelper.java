@@ -42,13 +42,14 @@ public class SparkJWTHelper {
             Algorithm algorithmHS = Algorithm.HMAC256(salt);
             Map<String, Object> claimList = new HashMap<>();
             claimList.put("kid", salt);
-            claimList.put("exp", 3600);
+            claimList.put("exp",  (System.currentTimeMillis()/1000)+3600);
             token = JWT.create()
                     .withHeader(claimList)
                     .withIssuer(user.getLogin())
                     .sign(algorithmHS);
             tokenInfo.add(token);
             tokenInfo.add(Base64.getEncoder().encodeToString(salt));
+            System.out.println(JWT.decode(token));
         }catch (Exception e){
             System.out.println("generateJWTWillItRain"+e);
         }
@@ -76,6 +77,9 @@ public class SparkJWTHelper {
             }
         }catch (JWTVerificationException e){
             System.out.println("isWillItRainTokenValid"+e);
+        }
+        catch (Exception e){
+            System.out.println("isWillItRainValid"+e);
         }
         return isValid;
     }
