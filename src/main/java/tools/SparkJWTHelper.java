@@ -42,6 +42,7 @@ public class SparkJWTHelper {
             Algorithm algorithmHS = Algorithm.HMAC256(salt);
             Map<String, Object> claimList = new HashMap<>();
             claimList.put("kid", salt);
+            claimList.put("exp", 3600);
             token = JWT.create()
                     .withHeader(claimList)
                     .withIssuer(user.getLogin())
