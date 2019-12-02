@@ -102,7 +102,7 @@ public class WillItRain {
                         String salt = request.cookie("user-token-salt");
                         User user = userDAO.getUserByLogin(request.cookie("login"));
                         if(sparkJWTHelper.isWillItRainTokenValid(token, salt,  user)){
-                            response.status(401);
+                            response.status(301);
                         }else{
                             response.status(401);
                         }
