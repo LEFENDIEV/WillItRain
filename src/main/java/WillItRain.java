@@ -327,7 +327,7 @@ public class WillItRain {
                     return finalMessage;
                 }
             } ));
-            //Redirect to the front page where the map is displayed
+            //Create a location for the user, the json format use the same attributes as the location table
             post(endpointList.get("setLocation"), ((request, response) ->{
                 String finalMessage="";
                 try {
