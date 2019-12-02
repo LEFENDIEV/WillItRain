@@ -119,9 +119,9 @@ public class WillItRain {
                         hashedPassword = Base64.getEncoder().encodeToString(encodedPassword);
                         if(user.getPassword().equals(hashedPassword)){
                             tokenInfo = sparkJWTHelper.generateJWTWillItRain(user);
-                            response.cookie("login", user.getLogin(),3600 );
-                            response.cookie("user-token", tokenInfo.get(0),3600,  false, true);
-                            response.cookie("user-token-salt", tokenInfo.get(1),3600,  false, true);
+                            response.cookie("","/","login", user.getLogin(), 3600,false, false);
+                            response.cookie("","/", "user-token", tokenInfo.get(0),3600,  false, true);
+                            response.cookie("","/","user-token-salt", tokenInfo.get(1),3600,  false, true);
                             finalMessage = "logged";
                             response.status(200);
                         }else{
@@ -163,9 +163,10 @@ public class WillItRain {
                             userDAO.addUser(user);
                             //token creation
                             tokenInfo= sparkJWTHelper.generateJWTWillItRain(user);
-                            response.cookie("user-token", tokenInfo.get(0),3600,  false, true);
-                            response.cookie("user-token-salt", tokenInfo.get(1),3600,  false, true);
-                            response.cookie("login", user.getLogin(), 3600);
+                            response.cookie("","/", "user-token", tokenInfo.get(0),3600,  false, true);
+                            response.cookie("","/","user-token-salt", tokenInfo.get(1),3600,  false, true);
+                            response.cookie("","/","login", user.getLogin(), 3600,false, false);
+                            finalMessage = "registered";
                             response.status(200);
                         }else{
                             finalMessage = "login taken";
@@ -337,13 +338,11 @@ public class WillItRain {
                         User user = userDAO.getUserByLogin(request.cookie("login"));
                         if(sparkJWTHelper.isWillItRainTokenValid(token, salt,  user)){
                             Gson gson             = new Gson();
-                            Type typeListAttr     = new TypeToken<List<String>>(){}.getType();
-                            List<String> listAttr = gson.fromJson(request.body(), typeListAttr);
+                            Type typeListAttr     = new TypeToken<HashMap<String, String>>(){}.getType();
+                            HashMap<String,String> listAttr =  gson.fromJson(request.body(), typeListAttr);
                             int nbLocation = locationDAO.getNbLocation(user.getId());
-                            int incrementalId = nbLocation++;
-                            System.out.println(incrementalId+"            "+nbLocation);
-                            Location currentLocation = new Location(incrementalId, Float.valueOf(listAttr.get(0)), Float.valueOf(listAttr.get(1)), user, listAttr.get(2));
-                            System.out.println(currentLocation.toString());
+                            int incrementalId = nbLocation+1;
+                            Location currentLocation = new Location(incrementalId, Float.valueOf(listAttr.get("longitude")), Float.valueOf(listAttr.get("latitude")), user, listAttr.get("formattedAdress"));
                             locationDAO.addLocation(currentLocation);
                             finalMessage = "location set";
                             response.status(200);
@@ -362,7 +361,8 @@ public class WillItRain {
                 }
             } ));
         }catch(Exception e){
-            System.out.println("getFrontPageMap"+e);
+            System.out.println("Main"+e);
         }
     }
 }
+
